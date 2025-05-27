@@ -1,14 +1,10 @@
 const puppeteer = require('puppeteer');
-const os = require('os');
-const username = os.userInfo().username;
-const workingExePath = '/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary';
-const workingDataBaseDir = `/Users/${username}/Library/Application\ Support/Google/Chrome\ Canary`;
 
 let browser;
 (async () => {
   /*
-    Start Chrome from the CLI with the following option before executing this test (for MacOS)
-    and make sure you have a logged in user:
+    Start Chrome from the CLI with the following option before executing this test and make sure you have a logged in user.
+    For macOS this would look like this:
     
     /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222 --user-data-dir=chrome-remote-debugging
 
