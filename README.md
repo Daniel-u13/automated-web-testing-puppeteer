@@ -5,7 +5,7 @@
 
 ## Requirements
 - A running Chrome instance with a logged-in user
-- Chrome needs to be started with the `--remote-debugging-port=<port>` flag.
+- Chrome needs to be started with the `--remote-debugging-port=<port>` and `--user-data-dir=<dir>` flags.
 - Adjust `workingExePath` and `workingDataBaseDir`.
 
 ## Installation & Usage
