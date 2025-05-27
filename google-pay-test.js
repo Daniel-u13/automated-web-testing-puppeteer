@@ -10,7 +10,7 @@ let browser;
     Start Chrome from the CLI with the following option before executing this test (for MacOS)
     and make sure you have a logged in user:
     
-    /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222
+    /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222 --user-data-dir=chrome-remote-debugging
 
   */
   const browserURL = 'http://127.0.0.1:9222';
@@ -35,13 +35,14 @@ let browser;
 
   await delay(1000);
 
-  const newPaymentMethod = await googlePayIframe.$$('xpath/.//span[contains(text(), \'Test Card: Mastercard\')]');
-  //const newPaymentMethod = await googlePayIframe.$$('xpath/.//div[contains(., \'YAY_VISA_1337\')]/text()/..');
-  await newPaymentMethod[2].click();
+  const newPaymentMethod = await googlePayIframe.$$('xpath/.//div[contains(., \'Test Card: Mastercard\')]/text()/..');
+  await newPaymentMethod[1].click();
 
   await delay(1000);
-  await googlePayIframe.click('xpath/.//span[text()=\'Continue\']');
-  //await googlePayIframe.click('xpath/.//span[text()=\'Pay now\']');
+  await googlePayIframe.click('xpath/.//span[text()=\'Pay\']');
+
+  // or if you have a Continue button:
+  //await googlePayIframe.click('xpath/.//span[text()=\'Continue\']');
 
 })()
   .catch(err => console.error(err))
