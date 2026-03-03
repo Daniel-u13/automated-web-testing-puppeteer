@@ -18,7 +18,21 @@
 # install the dependencies
 $ npm install
 
-# run the test
+# run the Google Pay test
 $ node google-pay-test.js
 ```
+
+## Lower Limb Anatomy Guide
+
+An interactive HTML-based anatomy reference covering the bones, muscles, nerves, and vasculature of the lower limb. Includes expandable region cards, clinical correlations, and a 10-question quiz with instant feedback.
+
+**Open the guide:**
+Open `lower-limb-anatomy-guide.html` in any browser.
+
+**Run the Puppeteer tests:**
+```sh
+$ node lower-limb-anatomy-test.js
+```
+
+The test suite validates navigation, section visibility, expandable cards, table content, and quiz functionality using headless Puppeteer.
 

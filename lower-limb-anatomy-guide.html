@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lower Limb Anatomy Guide</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      line-height: 1.6;
+      color: #2d3748;
+      background: #f7fafc;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2b6cb0, #2c5282);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    header p { opacity: 0.9; font-size: 1.1rem; }
+
+    nav {
+      background: #1a365d;
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    nav button {
+      background: transparent;
+      color: #bee3f8;
+      border: 1px solid #4299e1;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    nav button:hover, nav button.active {
+      background: #4299e1;
+      color: white;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .section {
+      display: none;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section.visible { display: block; }
+
+    .section h2 {
+      color: #2b6cb0;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .section h3 {
+      color: #2c5282;
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    .region-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .region-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 1.25rem;
+      transition: box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .region-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .region-card.expanded .card-details { display: block; }
+    .card-details { display: none; margin-top: 0.75rem; }
+
+    .region-card h4 {
+      color: #2b6cb0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .region-card h4::after {
+      content: '+';
+      margin-left: auto;
+      font-size: 1.2rem;
+      color: #a0aec0;
+    }
+
+    .region-card.expanded h4::after { content: '-'; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    th {
+      background: #edf2f7;
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    tr:hover td { background: #f7fafc; }
+
+    ul, ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+    li { margin-bottom: 0.25rem; }
+
+    .quiz-container {
+      background: #ebf8ff;
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .quiz-question {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #bee3f8;
+    }
+
+    .quiz-question:last-child { border-bottom: none; }
+    .quiz-question p { font-weight: 600; margin-bottom: 0.5rem; }
+
+    .quiz-options label {
+      display: block;
+      padding: 0.4rem 0.75rem;
+      margin: 0.25rem 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .quiz-options label:hover { background: #bee3f8; }
+
+    .quiz-feedback {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .quiz-feedback.correct {
+      display: block;
+      background: #c6f6d5;
+      color: #276749;
+    }
+
+    .quiz-feedback.incorrect {
+      display: block;
+      background: #fed7d7;
+      color: #9b2c2c;
+    }
+
+    #quiz-score {
+      display: none;
+      background: #2b6cb0;
+      color: white;
+      padding: 1rem;
+      border-radius: 6px;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+
+    #check-quiz-btn {
+      background: #2b6cb0;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+      transition: background 0.2s;
+    }
+
+    #check-quiz-btn:hover { background: #2c5282; }
+
+    .clinical-note {
+      background: #fefcbf;
+      border-left: 4px solid #ecc94b;
+      padding: 0.75rem 1rem;
+      margin: 0.75rem 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+    }
+
+    .clinical-note strong { color: #975a16; }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Lower Limb Anatomy Guide</h1>
+  <p>An interactive reference for the bones, muscles, nerves, and vasculature of the lower limb</p>
+</header>
+
+<nav id="main-nav">
+  <button class="active" data-section="overview">Overview</button>
+  <button data-section="bones">Bones &amp; Joints</button>
+  <button data-section="muscles">Muscles</button>
+  <button data-section="nerves">Nerves</button>
+  <button data-section="vasculature">Vasculature</button>
+  <button data-section="clinical">Clinical Notes</button>
+  <button data-section="quiz">Quiz</button>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div class="section visible" id="section-overview">
+    <h2>Overview of the Lower Limb</h2>
+    <p>The lower limb is designed for weight-bearing, locomotion, and maintaining balance. It is divided into the following regions:</p>
+    <div class="region-grid">
+      <div class="region-card" data-card="gluteal">
+        <h4>Gluteal Region</h4>
+        <p>The posterolateral area connecting the trunk to the free lower limb.</p>
+        <div class="card-details">
+          <ul>
+            <li>Contains the gluteal muscles (maximus, medius, minimus)</li>
+            <li>Deep lateral rotators of the hip</li>
+            <li>Superior and inferior gluteal neurovascular bundles</li>
+            <li>Sciatic nerve exits via the greater sciatic foramen</li>
+          </ul>
+        </div>
+      </div>
+      <div class="region-card" data-card="thigh">
+        <h4>Thigh</h4>
+        <p>The region between the hip and the knee, organized into three compartments.</p>
+        <div class="card-details">
+          <ul>
+            <li><strong>Anterior:</strong> Quadriceps femoris, sartorius (femoral nerve)</li>
+            <li><strong>Medial:</strong> Adductors of the hip (obturator nerve)</li>
+            <li><strong>Posterior:</strong> Hamstrings (sciatic nerve)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="region-card" data-card="leg">
+        <h4>Leg</h4>
+        <p>The region between the knee and the ankle, also with three compartments.</p>
+        <div class="card-details">
+          <ul>
+            <li><strong>Anterior:</strong> Dorsiflexors (deep fibular nerve)</li>
+            <li><strong>Lateral:</strong> Fibularis longus &amp; brevis (superficial fibular nerve)</li>
+            <li><strong>Posterior:</strong> Plantarflexors (tibial nerve)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="region-card" data-card="foot">
+        <h4>Foot</h4>
+        <p>The terminal part of the lower limb, structured into arches for support.</p>
+        <div class="card-details">
+          <ul>
+            <li>Dorsum (top) and sole (plantar surface)</li>
+            <li>Medial longitudinal, lateral longitudinal, and transverse arches</li>
+            <li>Intrinsic muscles arranged in four plantar layers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BONES & JOINTS -->
+  <div class="section" id="section-bones">
+    <h2>Bones &amp; Joints</h2>
+
+    <h3>Bones of the Lower Limb</h3>
+    <table id="bones-table">
+      <thead>
+        <tr><th>Bone</th><th>Region</th><th>Key Features</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Hip bone (os coxae)</td><td>Pelvic girdle</td><td>Ilium, ischium, pubis; acetabulum</td></tr>
+        <tr><td>Femur</td><td>Thigh</td><td>Longest bone; head, neck, greater &amp; lesser trochanters, condyles</td></tr>
+        <tr><td>Patella</td><td>Knee</td><td>Largest sesamoid bone; embedded in quadriceps tendon</td></tr>
+        <tr><td>Tibia</td><td>Leg</td><td>Weight-bearing; medial &amp; lateral condyles, medial malleolus</td></tr>
+        <tr><td>Fibula</td><td>Leg</td><td>Non-weight-bearing; head, lateral malleolus</td></tr>
+        <tr><td>Tarsals (7)</td><td>Foot</td><td>Talus, calcaneus, navicular, cuboid, 3 cuneiforms</td></tr>
+        <tr><td>Metatarsals (5)</td><td>Foot</td><td>Numbered I-V from medial to lateral</td></tr>
+        <tr><td>Phalanges (14)</td><td>Foot</td><td>Proximal, middle, distal (great toe has only 2)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Major Joints</h3>
+    <table id="joints-table">
+      <thead>
+        <tr><th>Joint</th><th>Type</th><th>Movements</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Hip joint</td><td>Ball-and-socket (synovial)</td><td>Flexion, extension, abduction, adduction, medial &amp; lateral rotation, circumduction</td></tr>
+        <tr><td>Knee joint</td><td>Modified hinge (synovial)</td><td>Flexion, extension, slight medial &amp; lateral rotation when flexed</td></tr>
+        <tr><td>Ankle (talocrural) joint</td><td>Hinge (synovial)</td><td>Dorsiflexion, plantarflexion</td></tr>
+        <tr><td>Subtalar joint</td><td>Plane (synovial)</td><td>Inversion, eversion</td></tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-note">
+      <strong>Clinical:</strong> The hip joint's blood supply via the medial circumflex femoral artery is vulnerable in femoral neck fractures, risking avascular necrosis of the femoral head.
+    </div>
+  </div>
+
+  <!-- MUSCLES -->
+  <div class="section" id="section-muscles">
+    <h2>Muscles of the Lower Limb</h2>
+
+    <h3>Anterior Thigh Compartment</h3>
+    <table>
+      <thead>
+        <tr><th>Muscle</th><th>Origin</th><th>Insertion</th><th>Action</th><th>Innervation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Rectus femoris</td><td>AIIS, superior acetabular rim</td><td>Tibial tuberosity via patellar ligament</td><td>Flexes hip, extends knee</td><td>Femoral nerve (L2-L4)</td></tr>
+        <tr><td>Vastus lateralis</td><td>Greater trochanter, linea aspera</td><td>Tibial tuberosity via patellar ligament</td><td>Extends knee</td><td>Femoral nerve (L2-L4)</td></tr>
+        <tr><td>Vastus medialis</td><td>Intertrochanteric line, linea aspera</td><td>Tibial tuberosity via patellar ligament</td><td>Extends knee</td><td>Femoral nerve (L2-L4)</td></tr>
+        <tr><td>Vastus intermedius</td><td>Anterior shaft of femur</td><td>Tibial tuberosity via patellar ligament</td><td>Extends knee</td><td>Femoral nerve (L2-L4)</td></tr>
+        <tr><td>Sartorius</td><td>ASIS</td><td>Pes anserinus (medial tibia)</td><td>Flexes, abducts, laterally rotates hip; flexes knee</td><td>Femoral nerve (L2-L3)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Medial Thigh Compartment</h3>
+    <table>
+      <thead>
+        <tr><th>Muscle</th><th>Origin</th><th>Insertion</th><th>Action</th><th>Innervation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Adductor longus</td><td>Body of pubis</td><td>Linea aspera</td><td>Adducts thigh</td><td>Obturator nerve (L2-L4)</td></tr>
+        <tr><td>Adductor brevis</td><td>Inferior pubic ramus</td><td>Linea aspera</td><td>Adducts thigh</td><td>Obturator nerve (L2-L4)</td></tr>
+        <tr><td>Adductor magnus</td><td>Ischiopubic ramus, ischial tuberosity</td><td>Linea aspera, adductor tubercle</td><td>Adducts thigh; hamstring part extends hip</td><td>Obturator nerve &amp; tibial division of sciatic (L2-L4)</td></tr>
+        <tr><td>Gracilis</td><td>Body &amp; inferior ramus of pubis</td><td>Pes anserinus (medial tibia)</td><td>Adducts thigh, flexes knee</td><td>Obturator nerve (L2-L3)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Posterior Thigh Compartment (Hamstrings)</h3>
+    <table>
+      <thead>
+        <tr><th>Muscle</th><th>Origin</th><th>Insertion</th><th>Action</th><th>Innervation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Biceps femoris (long head)</td><td>Ischial tuberosity</td><td>Head of fibula</td><td>Extends hip, flexes &amp; laterally rotates knee</td><td>Tibial division of sciatic (L5-S2)</td></tr>
+        <tr><td>Biceps femoris (short head)</td><td>Linea aspera</td><td>Head of fibula</td><td>Flexes &amp; laterally rotates knee</td><td>Common fibular division of sciatic (L5-S2)</td></tr>
+        <tr><td>Semitendinosus</td><td>Ischial tuberosity</td><td>Pes anserinus (medial tibia)</td><td>Extends hip, flexes &amp; medially rotates knee</td><td>Tibial division of sciatic (L5-S2)</td></tr>
+        <tr><td>Semimembranosus</td><td>Ischial tuberosity</td><td>Posterior medial tibial condyle</td><td>Extends hip, flexes &amp; medially rotates knee</td><td>Tibial division of sciatic (L5-S2)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Anterior Leg Compartment</h3>
+    <table>
+      <thead>
+        <tr><th>Muscle</th><th>Origin</th><th>Insertion</th><th>Action</th><th>Innervation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Tibialis anterior</td><td>Lateral tibia, interosseous membrane</td><td>Medial cuneiform, base of 1st metatarsal</td><td>Dorsiflexes ankle, inverts foot</td><td>Deep fibular nerve (L4-L5)</td></tr>
+        <tr><td>Extensor digitorum longus</td><td>Lateral tibial condyle, fibula, interosseous membrane</td><td>Dorsal expansions of digits 2-5</td><td>Extends digits 2-5, dorsiflexes ankle</td><td>Deep fibular nerve (L5-S1)</td></tr>
+        <tr><td>Extensor hallucis longus</td><td>Middle fibula, interosseous membrane</td><td>Dorsal aspect of distal phalanx of great toe</td><td>Extends great toe, dorsiflexes ankle</td><td>Deep fibular nerve (L5-S1)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Posterior Leg Compartment</h3>
+    <table>
+      <thead>
+        <tr><th>Muscle</th><th>Origin</th><th>Insertion</th><th>Action</th><th>Innervation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Gastrocnemius</td><td>Medial &amp; lateral femoral condyles</td><td>Calcaneus via calcaneal tendon</td><td>Plantarflexes ankle, flexes knee</td><td>Tibial nerve (S1-S2)</td></tr>
+        <tr><td>Soleus</td><td>Posterior tibia, fibula, soleal line</td><td>Calcaneus via calcaneal tendon</td><td>Plantarflexes ankle</td><td>Tibial nerve (S1-S2)</td></tr>
+        <tr><td>Tibialis posterior</td><td>Tibia, fibula, interosseous membrane</td><td>Navicular, cuneiforms, bases of metatarsals 2-4</td><td>Plantarflexes ankle, inverts foot</td><td>Tibial nerve (L4-L5)</td></tr>
+        <tr><td>Flexor digitorum longus</td><td>Posterior tibia</td><td>Distal phalanges of digits 2-5</td><td>Flexes digits 2-5, plantarflexes ankle</td><td>Tibial nerve (S2-S3)</td></tr>
+        <tr><td>Flexor hallucis longus</td><td>Posterior fibula</td><td>Distal phalanx of great toe</td><td>Flexes great toe, plantarflexes ankle</td><td>Tibial nerve (S2-S3)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-note">
+      <strong>Clinical:</strong> The pes anserinus (sartorius, gracilis, semitendinosus inserting on the medial tibia) is a common site of bursitis, especially in runners and those with knee osteoarthritis.
+    </div>
+  </div>
+
+  <!-- NERVES -->
+  <div class="section" id="section-nerves">
+    <h2>Nerves of the Lower Limb</h2>
+    <p>The lower limb is primarily supplied by the <strong>lumbar plexus</strong> (L1-L4) and the <strong>sacral plexus</strong> (L4-S3).</p>
+
+    <h3>Major Nerves</h3>
+    <table id="nerves-table">
+      <thead>
+        <tr><th>Nerve</th><th>Roots</th><th>Motor Supply</th><th>Sensory Supply</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Femoral nerve</td><td>L2-L4</td><td>Anterior thigh (quadriceps, sartorius, pectineus)</td><td>Anterior thigh; saphenous branch to medial leg &amp; foot</td></tr>
+        <tr><td>Obturator nerve</td><td>L2-L4</td><td>Medial thigh (adductors, gracilis)</td><td>Small area of medial thigh</td></tr>
+        <tr><td>Sciatic nerve</td><td>L4-S3</td><td>Posterior thigh (hamstrings); all muscles below knee via branches</td><td>Via tibial and common fibular branches</td></tr>
+        <tr><td>Tibial nerve</td><td>L4-S3</td><td>Posterior leg &amp; sole of foot</td><td>Sole of foot (medial &amp; lateral plantar nerves)</td></tr>
+        <tr><td>Common fibular (peroneal) nerve</td><td>L4-S2</td><td>Anterior &amp; lateral leg, dorsum of foot</td><td>Lateral leg, dorsum of foot</td></tr>
+        <tr><td>Superior gluteal nerve</td><td>L4-S1</td><td>Gluteus medius, gluteus minimus, tensor fasciae latae</td><td>None</td></tr>
+        <tr><td>Inferior gluteal nerve</td><td>L5-S2</td><td>Gluteus maximus</td><td>None</td></tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-note">
+      <strong>Clinical:</strong> The common fibular nerve wraps around the neck of the fibula and is vulnerable to injury there (e.g., from a leg cast or fibular fracture), resulting in foot drop (loss of dorsiflexion and eversion).
+    </div>
+
+    <h3>Dermatomes (Key Landmarks)</h3>
+    <table>
+      <thead>
+        <tr><th>Dermatome</th><th>Landmark</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>L1</td><td>Inguinal region</td></tr>
+        <tr><td>L2</td><td>Anterior mid-thigh</td></tr>
+        <tr><td>L3</td><td>Medial knee</td></tr>
+        <tr><td>L4</td><td>Medial malleolus</td></tr>
+        <tr><td>L5</td><td>Dorsum of foot, great toe web space</td></tr>
+        <tr><td>S1</td><td>Lateral foot, small toe</td></tr>
+        <tr><td>S2</td><td>Posterior thigh midline</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- VASCULATURE -->
+  <div class="section" id="section-vasculature">
+    <h2>Vasculature of the Lower Limb</h2>
+
+    <h3>Arterial Supply</h3>
+    <table id="arteries-table">
+      <thead>
+        <tr><th>Artery</th><th>Origin</th><th>Key Branches / Supply</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>External iliac</td><td>Common iliac</td><td>Becomes femoral artery at inguinal ligament</td></tr>
+        <tr><td>Femoral artery</td><td>External iliac</td><td>Profunda femoris (deep femoral); supplies anterior &amp; medial thigh</td></tr>
+        <tr><td>Profunda femoris</td><td>Femoral artery</td><td>Medial &amp; lateral circumflex femoral; perforating arteries to posterior thigh</td></tr>
+        <tr><td>Popliteal artery</td><td>Continuation of femoral (at adductor hiatus)</td><td>Genicular branches; divides into anterior &amp; posterior tibial</td></tr>
+        <tr><td>Anterior tibial artery</td><td>Popliteal artery</td><td>Anterior leg compartment; becomes dorsalis pedis at ankle</td></tr>
+        <tr><td>Posterior tibial artery</td><td>Popliteal artery</td><td>Posterior leg; fibular artery branch; medial &amp; lateral plantar arteries in foot</td></tr>
+        <tr><td>Dorsalis pedis</td><td>Anterior tibial</td><td>Dorsum of foot; deep plantar arch via 1st dorsal metatarsal</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Venous Drainage</h3>
+    <table>
+      <thead>
+        <tr><th>Vein</th><th>Course</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Great saphenous vein</td><td>Medial dorsal venous arch &rarr; anterior to medial malleolus &rarr; medial leg &amp; thigh &rarr; saphenous opening &rarr; femoral vein</td></tr>
+        <tr><td>Small saphenous vein</td><td>Lateral dorsal venous arch &rarr; posterior to lateral malleolus &rarr; posterior calf &rarr; popliteal vein</td></tr>
+        <tr><td>Deep veins</td><td>Accompany arteries as venae comitantes (anterior tibial, posterior tibial, fibular, popliteal, femoral veins)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-note">
+      <strong>Clinical:</strong> The dorsalis pedis pulse (between the 1st and 2nd metatarsal tendons) and the posterior tibial pulse (behind the medial malleolus) are key clinical landmarks for assessing peripheral vascular disease.
+    </div>
+  </div>
+
+  <!-- CLINICAL NOTES -->
+  <div class="section" id="section-clinical">
+    <h2>Clinical Correlations</h2>
+
+    <div class="region-grid">
+      <div class="region-card" data-card="fractures">
+        <h4>Common Fractures</h4>
+        <p>Fractures relevant to the lower limb.</p>
+        <div class="card-details">
+          <ul>
+            <li><strong>Femoral neck fracture:</strong> Common in elderly; risks avascular necrosis due to disruption of medial circumflex femoral artery</li>
+            <li><strong>Tibial shaft fracture:</strong> Most common long bone fracture; may cause compartment syndrome in the anterior compartment</li>
+            <li><strong>Pott's fracture:</strong> Bimalleolar or trimalleolar ankle fracture from forced eversion</li>
+            <li><strong>Jones fracture:</strong> Fracture at the base of the 5th metatarsal; poor blood supply delays healing</li>
+          </ul>
+        </div>
+      </div>
+      <div class="region-card" data-card="nerve-injuries">
+        <h4>Nerve Injuries</h4>
+        <p>Common nerve injuries and their presentations.</p>
+        <div class="card-details">
+          <ul>
+            <li><strong>Femoral nerve injury:</strong> Loss of knee extension (quadriceps), decreased knee jerk reflex, numbness of anterior thigh &amp; medial leg</li>
+            <li><strong>Obturator nerve injury:</strong> Weakness of thigh adduction, sensory loss over medial thigh</li>
+            <li><strong>Common fibular nerve injury:</strong> Foot drop (loss of dorsiflexion &amp; eversion), steppage gait, sensory loss on dorsum of foot</li>
+            <li><strong>Tibial nerve injury:</strong> Loss of plantarflexion &amp; toe flexion, inability to stand on tiptoes, sensory loss on sole</li>
+            <li><strong>Superior gluteal nerve injury:</strong> Trendelenburg gait (pelvis drops on unsupported side during stance phase)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="region-card" data-card="compartment">
+        <h4>Compartment Syndrome</h4>
+        <p>A surgical emergency of the lower limb.</p>
+        <div class="card-details">
+          <ul>
+            <li>Most common in the anterior compartment of the leg</li>
+            <li><strong>5 P's:</strong> Pain (especially with passive stretch), Pressure, Pulselessness (late sign), Paresthesia, Paralysis (late sign)</li>
+            <li>Treatment: emergent fasciotomy</li>
+            <li>Can follow tibial fractures, crush injuries, or reperfusion</li>
+          </ul>
+        </div>
+      </div>
+      <div class="region-card" data-card="dvt">
+        <h4>Deep Vein Thrombosis (DVT)</h4>
+        <p>Thrombosis in the deep veins of the lower limb.</p>
+        <div class="card-details">
+          <ul>
+            <li><strong>Virchow's triad:</strong> Stasis, endothelial injury, hypercoagulability</li>
+            <li>Most common in deep veins of the calf and thigh</li>
+            <li>Symptoms: unilateral leg swelling, warmth, erythema, calf tenderness</li>
+            <li>Risk: pulmonary embolism if thrombus dislodges</li>
+            <li>Diagnosis: compression ultrasound, D-dimer</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="section" id="section-quiz">
+    <h2>Test Your Knowledge</h2>
+    <div class="quiz-container">
+
+      <div class="quiz-question" data-answer="c">
+        <p>1. Which nerve is most commonly injured at the neck of the fibula?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q1" value="a"> Tibial nerve</label>
+          <label><input type="radio" name="q1" value="b"> Femoral nerve</label>
+          <label><input type="radio" name="q1" value="c"> Common fibular (peroneal) nerve</label>
+          <label><input type="radio" name="q1" value="d"> Obturator nerve</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="b">
+        <p>2. Which muscle does NOT insert at the pes anserinus?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q2" value="a"> Sartorius</label>
+          <label><input type="radio" name="q2" value="b"> Biceps femoris</label>
+          <label><input type="radio" name="q2" value="c"> Gracilis</label>
+          <label><input type="radio" name="q2" value="d"> Semitendinosus</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="d">
+        <p>3. The femoral artery becomes the popliteal artery after passing through which structure?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q3" value="a"> Inguinal ligament</label>
+          <label><input type="radio" name="q3" value="b"> Femoral triangle</label>
+          <label><input type="radio" name="q3" value="c"> Obturator canal</label>
+          <label><input type="radio" name="q3" value="d"> Adductor hiatus</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="a">
+        <p>4. Which artery is at greatest risk in a femoral neck fracture?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q4" value="a"> Medial circumflex femoral artery</label>
+          <label><input type="radio" name="q4" value="b"> Lateral circumflex femoral artery</label>
+          <label><input type="radio" name="q4" value="c"> Obturator artery</label>
+          <label><input type="radio" name="q4" value="d"> Profunda femoris artery</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="c">
+        <p>5. Injury to the superior gluteal nerve would result in which clinical sign?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q5" value="a"> Foot drop</label>
+          <label><input type="radio" name="q5" value="b"> Loss of knee extension</label>
+          <label><input type="radio" name="q5" value="c"> Trendelenburg sign (contralateral pelvic drop)</label>
+          <label><input type="radio" name="q5" value="d"> Inability to plantarflex</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="b">
+        <p>6. The great saphenous vein drains into which vein?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q6" value="a"> Popliteal vein</label>
+          <label><input type="radio" name="q6" value="b"> Femoral vein</label>
+          <label><input type="radio" name="q6" value="c"> External iliac vein</label>
+          <label><input type="radio" name="q6" value="d"> Internal iliac vein</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="a">
+        <p>7. Which dermatome corresponds to the medial malleolus?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q7" value="a"> L4</label>
+          <label><input type="radio" name="q7" value="b"> L5</label>
+          <label><input type="radio" name="q7" value="c"> S1</label>
+          <label><input type="radio" name="q7" value="d"> L3</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="d">
+        <p>8. Which compartment of the leg is most susceptible to compartment syndrome?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q8" value="a"> Posterior superficial</label>
+          <label><input type="radio" name="q8" value="b"> Lateral</label>
+          <label><input type="radio" name="q8" value="c"> Posterior deep</label>
+          <label><input type="radio" name="q8" value="d"> Anterior</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="c">
+        <p>9. Which bone is the largest sesamoid bone in the body?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q9" value="a"> Talus</label>
+          <label><input type="radio" name="q9" value="b"> Calcaneus</label>
+          <label><input type="radio" name="q9" value="c"> Patella</label>
+          <label><input type="radio" name="q9" value="d"> Navicular</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-answer="b">
+        <p>10. The tibialis anterior muscle is innervated by which nerve?</p>
+        <div class="quiz-options">
+          <label><input type="radio" name="q10" value="a"> Superficial fibular nerve</label>
+          <label><input type="radio" name="q10" value="b"> Deep fibular nerve</label>
+          <label><input type="radio" name="q10" value="c"> Tibial nerve</label>
+          <label><input type="radio" name="q10" value="d"> Femoral nerve</label>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <button id="check-quiz-btn">Check Answers</button>
+      <div id="quiz-score"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Lower Limb Anatomy Guide &mdash; An interactive educational resource</p>
+</footer>
+
+<script>
+  // Navigation
+  const navButtons = document.querySelectorAll('nav button');
+  const sections = document.querySelectorAll('.section');
+
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      navButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const target = btn.getAttribute('data-section');
+      sections.forEach(s => s.classList.remove('visible'));
+      document.getElementById('section-' + target).classList.add('visible');
+    });
+  });
+
+  // Expandable cards
+  document.querySelectorAll('.region-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('expanded');
+    });
+  });
+
+  // Quiz
+  document.getElementById('check-quiz-btn').addEventListener('click', () => {
+    let score = 0;
+    const questions = document.querySelectorAll('.quiz-question');
+
+    questions.forEach(q => {
+      const correctAnswer = q.getAttribute('data-answer');
+      const selected = q.querySelector('input[type="radio"]:checked');
+      const feedback = q.querySelector('.quiz-feedback');
+
+      feedback.classList.remove('correct', 'incorrect');
+
+      if (selected && selected.value === correctAnswer) {
+        score++;
+        feedback.textContent = 'Correct!';
+        feedback.classList.add('correct');
+      } else if (selected) {
+        feedback.textContent = 'Incorrect. The correct answer is: ' + q.querySelector('input[value="' + correctAnswer + '"]').parentElement.textContent.trim();
+        feedback.classList.add('incorrect');
+      } else {
+        feedback.textContent = 'No answer selected.';
+        feedback.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('quiz-score');
+    scoreDiv.style.display = 'block';
+    scoreDiv.textContent = 'Your score: ' + score + ' / ' + questions.length;
+  });
+</script>
+
+</body>
+</html>
